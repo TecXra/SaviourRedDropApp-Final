@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Molvi</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Register</string>
+    <string-array name="bloodgroup">
+
+        <item>A+ve</item>
+        <item>B+ve</item>
+        <item>AB+ve</item>
+        <item>O+ve</item>
+        <item>A-ve</item>
+        <item>B-ve</item>
+        <item>AB-ve</item>
+        <item>O-ve</item>
+
+
+    </string-array>
+    <string-array name="Area">
+        <item>Badamibag</item>
+        <item>Cooperative Store</item>
+        <item>Dharampura</item>
+        <item>Darogawala</item>
+        <item>Faisal Town</item>
+        <item>Gari Shau</item>
+        <item>Ghazi Road</item>
+        <item>Gajumata</item>
+        <item>Ichra</item>
+        <item>Johar Town</item>
+        <item>Lahore Cantt</item>
+        <item>Manavaa</item>
+        <item>Mazang</item>
+        <item>Muslim Town</item>
+        <item>Mall Road</item>
+        <item>Model Town</item>
+        <item>Shadrah</item>
+        <item> Sabzazar</item>
+        <item>Shalamar Bag</item>
+        <item>Shadman</item>
+        <item> Thokar Naiz Baig</item>
+        <item> Town Ship </item>
+        <item>Wahdat Road</item>
+
+
+    </string-array>
+    <string name="title_activity_logindisplay">logindisplay</string>
+    <string name="title_activity_show__search__half">Show_Search_Half</string>
+    <string name="title_activity_first_search">First_search</string>
+    <string name="title_activity_show_search_full">show_search_full</string>
+    <string name="title_activity_about_us">About_us</string>
+    <string name="title_activity_contact_us">Contact_us</string>
+
+</resources>
