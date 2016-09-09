@@ -77,12 +77,20 @@
         android:layout_height="wrap_content"
         android:text="Register"
         android:id="@+id/Register"
-        android:layout_marginBottom="60dp"
 
-
-        android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/registerReload"
+                android:src="@drawable/refresh"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                />
+
         </LinearLayout>
+
     </ScrollView>
 </LinearLayout>
