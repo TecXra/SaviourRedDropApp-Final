@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class Profile_Activity extends Activity {
     private Spinner bloodg, areea;
     private Button submit;
     private ProgressDialog pDialog;
+    private ImageButton reload;
 
 
     String Name,BGId,Area, PhoneNumber,appUserId,key;
@@ -64,8 +66,7 @@ submit.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
         getValues();
-        pDialog.setMessage("Registering...");
-        showDialog();
+
 
     }
 });
@@ -83,6 +84,7 @@ submit.setOnClickListener(new View.OnClickListener() {
         bloodg = (Spinner) findViewById(R.id.spinnerblood1);
         areea = (Spinner) findViewById(R.id.spinnerblood);
         submit = (Button) findViewById(R.id.Register);
+      //  reload= (ImageButton) findViewById(R.id.imageButton);
 
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(true);
@@ -100,26 +102,26 @@ submit.setOnClickListener(new View.OnClickListener() {
 
     protected void getValues() {
 
-           Name = name.getText().toString();
-        PhoneNumber=contact.getText().toString();
+        Name = name.getText().toString();
+        PhoneNumber = contact.getText().toString();
 
 
-     //   Toast.makeText(this,"rhis is"+Name ,Toast.LENGTH_LONG).show();
-      //  Toast.makeText(this,"rhis is"+ PhoneNumber,Toast.LENGTH_LONG).show();
+        //   Toast.makeText(this,"rhis is"+Name ,Toast.LENGTH_LONG).show();
+        //  Toast.makeText(this,"rhis is"+ PhoneNumber,Toast.LENGTH_LONG).show();
 
         Resources resources = getResources();
         String[] codes = resources.getStringArray(R.array.bloodgroup);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Profile_Activity.this, android.R.layout.simple_list_item_1,codes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Profile_Activity.this, android.R.layout.simple_list_item_1, codes);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         bloodg.setAdapter(adapter);
         bloodg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                BGIdd=bloodg.getSelectedItemPosition()+1;
-             //   Toast.makeText(Profile_Activity.this,"this position is"+BGId, Toast.LENGTH_LONG).show();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                BGIdd = bloodg.getSelectedItemPosition() + 1;
+                //   Toast.makeText(Profile_Activity.this,"this position is"+BGId, Toast.LENGTH_LONG).show();
 
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -127,20 +129,19 @@ submit.setOnClickListener(new View.OnClickListener() {
         });
 
 
-
         String[] areas = resources.getStringArray(R.array.Area);
-        ArrayAdapter<String> adapters = new ArrayAdapter<String>(Profile_Activity.this, android.R.layout.simple_list_item_1,areas);
+        ArrayAdapter<String> adapters = new ArrayAdapter<String>(Profile_Activity.this, android.R.layout.simple_list_item_1, areas);
         adapters.setDropDownViewResource(android.R.layout.simple_list_item_1);
         areea.setAdapter(adapters);
         //Toast.makeText(Profile_Activity.this,"this position is" , Toast.LENGTH_LONG).show();
         areea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                Areaa=areea.getSelectedItemPosition()+1;
-                Toast.makeText(Profile_Activity.this,"this position is"+ Areaa , Toast.LENGTH_LONG).show();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Areaa = areea.getSelectedItemPosition() + 1;
+                //   Toast.makeText(Profile_Activity.this,"this position is"+ Areaa , Toast.LENGTH_LONG).show();
 
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -148,24 +149,32 @@ submit.setOnClickListener(new View.OnClickListener() {
         });
 
 
-
-        BGId=Integer.toString(BGIdd);
-         Area=Integer.toString(Areaa);
-
+        BGId = Integer.toString(BGIdd);
+        Area = Integer.toString(Areaa);
 
 
-        if(!Name.isEmpty() && !PhoneNumber.isEmpty())
-        {
-          Toast.makeText(this,"good",Toast.LENGTH_LONG).show();
+        if (Name.isEmpty() && PhoneNumber.isEmpty()) {
+            Toast.makeText(Profile_Activity.this, "Please Enter your Credentials", Toast.LENGTH_LONG).show();
+
+            // Toast.makeText(this,"good",Toast.LENGTH_LONG).show();
         }
-
-        else
+        else if (PhoneNumber.length()!=11)
         {
-            Toast.makeText(Profile_Activity.this,"Please Enter your Credentials",Toast.LENGTH_LONG).show();
+            contact.setError("Invalid contact details");
+            //   Toast.makeText(this,"Invalid contact details",Toast.LENGTH_LONG).show();
         }
+        else {
+Toast.makeText(this,"else runs",Toast.LENGTH_LONG).show();
+            contact.setError(null);
+            pDialog.setMessage("Registering...");
+            showDialog();
+            profileRequest();
 
+        }
+    }
 
-
+protected void profileRequest()
+{
         Response.Listener<String> responselistener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -182,8 +191,24 @@ submit.setOnClickListener(new View.OnClickListener() {
                 startActivity(intent);
             }
         };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideDialog();
+                Toast.makeText(Profile_Activity.this,"Sorry Your request cannot be made due to insufficient network",Toast.LENGTH_SHORT).show();
 
-        ProfileRequest profileRequest=new ProfileRequest(Name,BGId,Area,PhoneNumber,appUserId,responselistener);
+//                reload.setVisibility(View.VISIBLE);
+/*                reload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        profileRequest();
+                    }
+                });
+*/
+            }
+        };
+
+        ProfileRequest profileRequest=new ProfileRequest(Name,BGId,Area,PhoneNumber,appUserId,responselistener,errorListener);
         RequestQueue queue = Volley.newRequestQueue(Profile_Activity.this);
         queue.add(profileRequest);
 
@@ -197,7 +222,7 @@ submit.setOnClickListener(new View.OnClickListener() {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getBaseContext(), MainActivity.class);
+        Intent i = new Intent(getBaseContext(), Register_Activity.class);
         startActivity(i);
         return;
     }

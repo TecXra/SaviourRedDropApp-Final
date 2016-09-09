@@ -33,7 +33,7 @@ public class ContectUs_Activity extends Activity {
 
 
 
-        Intent intent = getIntent();
+       Intent intent = getIntent();
         String Name = intent.getStringExtra("Name");
         String Contact = intent.getStringExtra("Contact");
         String Id= intent.getStringExtra("Id");
@@ -102,8 +102,8 @@ public class ContectUs_Activity extends Activity {
 
 
     }
-/*
-    @Override
+
+
     public void onProcessCompelete(Object result) {
 
 
@@ -142,5 +142,5 @@ public class ContectUs_Activity extends Activity {
 
     }
 
-*/
+
 }

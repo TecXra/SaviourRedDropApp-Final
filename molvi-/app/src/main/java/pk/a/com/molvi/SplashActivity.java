@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    sleep(5000);
+                    sleep(3000);
                     SharedPreferences prefs = getSharedPreferences("data", Context.MODE_PRIVATE);
 
                     String key=prefs.getString("key","N/A");

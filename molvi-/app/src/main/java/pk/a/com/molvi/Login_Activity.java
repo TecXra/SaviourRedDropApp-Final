@@ -7,13 +7,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import pk.a.com.molvi.RequestExecuter.AppURLs;
@@ -38,6 +43,8 @@ public class Login_Activity extends Activity {
     private Button login;
     private String Email, Password;
     private ProgressDialog pDialog;
+    private ImageView refresh;
+    private  ImageView showPass;
 
 
     @Override
@@ -52,6 +59,8 @@ public class Login_Activity extends Activity {
         user = (EditText) findViewById(R.id.editText);
         pass = (EditText) findViewById(R.id.editText2);
         login = (Button) findViewById(R.id.login);
+       refresh= (ImageView) findViewById(R.id.refresh);
+        showPass= (ImageView) findViewById(R.id.passwordShow);
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -71,31 +80,46 @@ boolean flag = getValues();
             }
 
         });
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch ( event.getAction() ) {
+                    case MotionEvent.ACTION_DOWN:
+                        pass.setInputType(InputType.TYPE_CLASS_TEXT);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     protected void getValues() {
         Email = user.getText().toString();
         Password = pass.getText().toString();
 
-       if (Email.equals("") || Password.equals(""))
-       {
-            Toast.makeText(Login_Activity.this, "Enter Fields",
-                    Toast.LENGTH_SHORT).show();
+        if (Email.equals("") || Password.equals("")) {
+            Toast.makeText(Login_Activity.this, "Enter Your Credentials ",
+                    Toast.LENGTH_LONG).show();
         }
-       else
-       {
-           pDialog=new ProgressDialog(Login_Activity.this);
-           pDialog.setCancelable(true);
+        else {
+            pDialog = new ProgressDialog(Login_Activity.this);
+            pDialog.setCancelable(true);
             pDialog.setMessage("Checking Your Credentilas...");
             showDialog();
+            loginReguest();
 
         }
-
+    }
+    public void loginReguest()
+    {
          Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 hideDialog();
-                Toast.makeText(Login_Activity.this, "come in response listerner " + " ", Toast.LENGTH_LONG).show();
+           //     Toast.makeText(Login_Activity.this, "come in response listerner " + " ", Toast.LENGTH_LONG).show();
 
                 String User_Id = response;
                 if (User_Id.equals("404")) {
@@ -119,8 +143,23 @@ boolean flag = getValues();
 
             }
         };
+        Response.ErrorListener errorListener=new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideDialog();
+                Toast.makeText(Login_Activity.this,"Sorry Your request cannot be made due to insufficient network",Toast.LENGTH_LONG).show();
+               refresh.setVisibility(View.VISIBLE);
+                refresh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loginReguest();
+                        refresh.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+        };
 
-        LoginRequest loginRequest= new LoginRequest(Email,Password,listener);
+        LoginRequest loginRequest= new LoginRequest(Email,Password,listener,errorListener);
         RequestQueue queue= Volley.newRequestQueue(Login_Activity.this);
         queue.add(loginRequest);
         Toast.makeText(Login_Activity.this,"request has been made",Toast.LENGTH_LONG).show();
